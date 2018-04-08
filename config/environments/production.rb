@@ -69,8 +69,6 @@ Rails.application.configure do
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
 
-  config.action_mailer.default_url_options = { host: 'smarthomemothership.herokuapp.com', port: 3000 }
-
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
   config.i18n.fallbacks = true
@@ -97,10 +95,15 @@ Rails.application.configure do
   ActionMailer::Base.smtp_settings = {
     user_name: ENV["SENDGRID_USERNAME"],
     password: ENV["SENDGRID_PASSWORD"],
-    domain: "smarthomemothership.herokuapp.com",
+    domain: ENV["APP_HOSTNAME"],
     address: "smtp.sendgrid.net",
     port: 587,
     authentication: :plain,
     enable_starttls_auto: true
+  }
+
+  config.action_mailer.default_url_options = {
+    host: ENV["APP_HOSTNAME"],
+    protocol: "https"
   }
 end
