@@ -10,6 +10,8 @@ jobs:
           PGUSER: root
           RAILS_ENV: test
           RACK_ENV: test
+          # Use default bundle app config path: https://github.com/rails/spring/issues/545
+          BUNDLE_APP_CONFIG: .bundle
           BUNDLE_PATH: vendor/bundle
           BUNDLE_JOBS: 4
           BUNDLE_RETRY: 3
@@ -35,6 +37,16 @@ jobs:
           key: v1-source-{{ .Branch }}-{{ .Revision }}
           paths:
             - ".git"
+
+      - run:
+          name: Set local Bundler config
+          command: |
+            mkdir $BUNDLE_APP_CONFIG && echo 'BUNDLE_PATH: "vendor/bundle"' > $BUNDLE_APP_CONFIG/config
+      - run:
+          name: Check Bundler settings
+          command: |
+            env | grep BUNDLE
+            bundle config
 
       - restore_cache:
           keys:
